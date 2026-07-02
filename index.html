@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あなたの“マーケ性格”診断</title>
+<style>
+  :root{
+    --navy:#1a237e; --yellow:#fff59d; --ink:#1f2937; --sub:#6b7280;
+    --bg:#eef0f6; --card:#ffffff; --line:#e5e7eb;
+    --blue:#2563eb; --green:#059669; --orange:#ea580c; --pink:#db2777;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+    color:var(--ink); background:var(--bg);
+    line-height:1.7; letter-spacing:.01em;
+    display:flex; justify-content:center;
+    min-height:100vh; padding:20px 14px 40px;
+  }
+  .app{width:100%; max-width:520px;}
+  .screen{display:none; animation:fade .4s ease;}
+  .screen.on{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion:reduce){.screen{animation:none;} *{transition:none!important;}}
+
+  /* ---------- start ---------- */
+  .hero{
+    background:linear-gradient(160deg,#1a237e 0%,#2a339a 100%);
+    border-radius:22px; padding:30px 24px 26px; color:#fff; text-align:center;
+    box-shadow:0 10px 30px rgba(26,35,126,.22);
+  }
+  .hero .eyebrow{font-size:13px; letter-spacing:.14em; color:#c7cdf2; margin-bottom:10px;}
+  .hero h1{font-size:29px; font-weight:800; margin:0 0 6px; line-height:1.35;}
+  .hero h1 .mark{color:var(--yellow);}
+  .hero .lead{font-size:15px; color:#dfe3fb; margin:0;}
+  .avatars{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:22px 0 4px;}
+  .avatars svg{width:100%; height:auto; display:block;}
+  .startwrap{margin-top:20px;}
+  .btn{
+    display:block; width:100%; border:0; cursor:pointer; font-family:inherit;
+    font-size:18px; font-weight:800; color:#fff; background:var(--navy);
+    border-radius:14px; padding:16px; transition:transform .12s ease, box-shadow .12s ease;
+    box-shadow:0 6px 16px rgba(26,35,126,.25);
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(1px);}
+  .btn.ghost{background:#fff; color:var(--navy); border:2px solid var(--navy); box-shadow:none;}
+  .note{font-size:12.5px; color:var(--sub); text-align:center; margin-top:14px;}
+
+  /* ---------- quiz ---------- */
+  .bar-top{display:flex; align-items:center; justify-content:space-between; margin:6px 2px 14px;}
+  .qcount{font-size:14px; font-weight:800; color:var(--navy);}
+  .qcount b{font-size:20px;}
+  .axistag{font-size:12px; font-weight:700; color:#fff; background:var(--navy); padding:4px 12px; border-radius:999px;}
+  .progress{height:8px; background:#dfe2ee; border-radius:999px; overflow:hidden; margin:0 2px 22px;}
+  .progress i{display:block; height:100%; background:var(--navy); width:0; border-radius:999px; transition:width .35s ease;}
+  .qcard{background:var(--card); border-radius:20px; padding:26px 22px; box-shadow:0 6px 20px rgba(31,41,55,.06);}
+  .qtext{font-size:20px; font-weight:800; line-height:1.55; margin:0 0 20px;}
+  .opt{
+    display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left; cursor:pointer;
+    font-family:inherit; font-size:16px; line-height:1.55; color:var(--ink);
+    background:#f7f8fc; border:2px solid #eceff8; border-radius:14px; padding:16px 16px;
+    margin-bottom:12px; transition:border-color .12s ease, background .12s ease, transform .1s ease;
+  }
+  .opt:hover{border-color:var(--navy); background:#fff;}
+  .opt:active{transform:scale(.99);}
+  .opt .ab{
+    flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:var(--navy); color:#fff;
+    font-weight:800; font-size:15px; display:flex; align-items:center; justify-content:center; margin-top:1px;
+  }
+  .back{background:none; border:0; color:var(--sub); font-family:inherit; font-size:13px; cursor:pointer; margin-top:16px; padding:6px;}
+
+  /* ---------- result ---------- */
+  .r-top{text-align:center; margin-bottom:6px;}
+  .r-top .lbl{font-size:14px; color:var(--sub); letter-spacing:.08em;}
+  .r-hero{border-radius:22px; padding:26px 22px 24px; text-align:center; color:#fff; animation:pop .5s ease;}
+  @keyframes pop{0%{transform:scale(.94); opacity:0;} 100%{transform:scale(1); opacity:1;}}
+  .r-hero svg{width:150px; height:150px;}
+  .r-num{font-size:14px; font-weight:800; opacity:.9; letter-spacing:.1em;}
+  .r-name{font-size:28px; font-weight:800; margin:2px 0 8px;}
+  .r-catch{font-size:15px; opacity:.95; margin:0;}
+  .words{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:18px 0 22px;}
+  .word{font-size:13px; font-weight:800; color:var(--navy); background:#fff; border:2px solid #e3e6f2; border-radius:999px; padding:6px 14px;}
+  .word span{color:var(--sub); font-weight:600; margin-right:2px;}
+
+  .rows{background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 6px 20px rgba(31,41,55,.06);}
+  .row{padding:16px 18px; border-top:1px solid var(--line);}
+  .row:first-child{border-top:0;}
+  .row .k{font-size:12.5px; font-weight:800; color:var(--sub); margin-bottom:4px; display:flex; align-items:center; gap:6px;}
+  .row .v{font-size:15px; line-height:1.6;}
+  .row.weak{background:var(--yellow); }
+  .row.weak .k{color:#8a6d00;}
+  .row.weak .tag{font-size:11px; font-weight:800; color:#fff; background:#c98a00; border-radius:6px; padding:2px 7px;}
+  .dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+
+  .grp{margin-top:26px;}
+  .grp h3{font-size:16px; font-weight:800; margin:0 0 4px; text-align:center;}
+  .grp p.sub{font-size:12.5px; color:var(--sub); text-align:center; margin:0 0 16px;}
+  .g4{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .gcell{border:2px solid var(--line); border-radius:14px; padding:12px 12px; background:#fff; opacity:.5; transition:.2s;}
+  .gcell.me{opacity:1; box-shadow:0 6px 16px rgba(31,41,55,.1);}
+  .gcell .gname{font-size:14px; font-weight:800; display:flex; align-items:center; gap:7px;}
+  .gcell .gdesc{font-size:11.5px; color:var(--sub); margin-top:5px; line-height:1.5;}
+  .gcell .youare{font-size:10.5px; font-weight:800; color:#fff; border-radius:6px; padding:1px 7px; margin-left:auto;}
+
+  .hook{background:linear-gradient(160deg,#1a237e,#2a339a); color:#fff; border-radius:18px; padding:20px 20px; margin-top:22px; text-align:center;}
+  .hook .big{font-size:18px; font-weight:800; margin:0 0 8px;}
+  .hook .big .mark{color:var(--yellow);}
+  .hook p{font-size:13.5px; color:#dfe3fb; margin:0; line-height:1.65;}
+  .actions{margin-top:22px;}
+
+  /* ---------- types list ---------- */
+  .types-head{text-align:center; margin:6px 2px 20px;}
+  .types-head h2{font-size:24px; font-weight:800; margin:0 0 4px;}
+  .types-head p{font-size:13px; color:var(--sub); margin:0;}
+  .tgroup{margin-bottom:18px;}
+  .tglabel{font-size:14px; font-weight:800; display:flex; align-items:center; gap:8px; margin:0 2px 10px; flex-wrap:wrap;}
+  .tglabel .gd{font-size:11.5px; font-weight:600; color:var(--sub);}
+  .tlist{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .tcard{display:flex; align-items:center; gap:10px; text-align:left; cursor:pointer; font-family:inherit;
+    background:#fff; border:2px solid var(--line); border-radius:14px; padding:11px; transition:.14s;}
+  .tcard:hover{border-color:var(--navy); transform:translateY(-2px); box-shadow:0 8px 18px rgba(31,41,55,.08);}
+  .tcard .tchar{flex:0 0 auto; width:50px;}
+  .tcard .tchar svg{width:50px; height:auto; display:block;}
+  .tcard .tname{font-size:13px; font-weight:800; line-height:1.35; display:flex; align-items:center; gap:5px; flex-wrap:wrap;}
+  .tcard .tname b{font-size:14px;}
+  .tcard .tcatch{font-size:10.5px; color:var(--sub); line-height:1.45; margin-top:3px;}
+  .me-badge{font-size:9.5px; font-weight:800; color:#fff; border-radius:5px; padding:1px 6px;}
+  @media (max-width:400px){ .tlist{grid-template-columns:1fr;} }
+
+  /* ---------- modal ---------- */
+  .modal{position:fixed; inset:0; background:rgba(17,20,40,.55); display:none; align-items:center; justify-content:center; padding:18px; z-index:50;}
+  .modal.on{display:flex; animation:fade .25s ease;}
+  .modal-in{background:var(--bg); border-radius:20px; width:100%; max-width:460px; max-height:88vh; overflow:auto; position:relative; padding:0 0 20px;}
+  .modal-x{position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; border:0; background:rgba(255,255,255,.85); color:#333; font-size:15px; cursor:pointer; z-index:2;}
+  .m-hero{border-radius:20px 20px 0 0; padding:22px 20px 18px; text-align:center; color:#fff;}
+  .m-hero svg{width:110px; height:110px;}
+  .m-grp{font-size:12px; font-weight:800; margin-top:10px; display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.18); padding:4px 12px; border-radius:999px;}
+  .modal .rows{margin:16px 16px 0;}
+
+  /* ---------- start extra link ---------- */
+  .start-link{display:block; width:100%; background:none; border:0; color:var(--navy); font-family:inherit;
+    font-size:13.5px; font-weight:700; cursor:pointer; margin-top:14px; text-decoration:underline; text-underline-offset:3px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ START ============ -->
+  <section id="s-start" class="screen on">
+    <div class="hero">
+      <div class="eyebrow">所要 30秒 ・ 全 9 問</div>
+      <h1>あなたの<span class="mark">“マーケ性格”</span>診断</h1>
+      <p class="lead">マーケにも、自分に合う“戦い方”があります。<br>まずは、あなたの型を知るところから。</p>
+      <div class="avatars" id="startAvatars"></div>
+    </div>
+    <div class="startwrap">
+      <button class="btn" onclick="start()">はじめる</button>
+      <p class="note">正解はありません。ぱっと直感で選んでOKです。</p>
+      <button class="start-link" onclick="showTypes()">先に8タイプの一覧を見る</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="s-quiz" class="screen">
+    <div class="bar-top">
+      <div class="qcount">問 <b id="qNow">1</b> <span style="color:#9aa1c4">/ 9</span></div>
+      <div class="axistag" id="qAxis">決め方</div>
+    </div>
+    <div class="progress"><i id="qBar"></i></div>
+    <div class="qcard">
+      <p class="qtext" id="qText"></p>
+      <button class="opt" onclick="answer('a')"><span class="ab">A</span><span id="qA"></span></button>
+      <button class="opt" onclick="answer('b')"><span class="ab">B</span><span id="qB"></span></button>
+    </div>
+    <button class="back" id="qBack" onclick="back()">← ひとつ前にもどる</button>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="s-result" class="screen">
+    <div class="r-top"><span class="lbl">あなたのタイプは…</span></div>
+    <div class="r-hero" id="rHero"></div>
+    <div class="words" id="rWords"></div>
+    <div class="rows" id="rRows"></div>
+
+    <div class="grp">
+      <h3>大きく分けると、この4色</h3>
+      <p class="sub">あなたのグループはここ</p>
+      <div class="g4" id="rGroups"></div>
+    </div>
+
+    <div class="hook">
+      <p class="big">苦手なところは、<span class="mark">AIで埋められます</span></p>
+      <p>チームでこの4色を並べたとき、<b style="color:#fff">いない色＝会社の“穴”</b>。<br>その穴を、これからAIで補っていきます。</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="showTypes()">ほかの7タイプも見てみる →</button>
+      <button class="btn ghost" style="margin-top:12px" onclick="reset()">もう一度やってみる</button>
+    </div>
+  </section>
+
+  <!-- ============ TYPES LIST ============ -->
+  <section id="s-types" class="screen">
+    <div class="types-head">
+      <h2>8つのタイプ</h2>
+      <p>大きく4つのグループに分かれます</p>
+    </div>
+    <div id="typesList"></div>
+    <div class="actions" id="typesActions"></div>
+  </section>
+
+  <!-- ============ TYPE DETAIL MODAL ============ -->
+  <div class="modal" id="modal">
+    <div class="modal-in">
+      <button class="modal-x" onclick="closeType()" aria-label="閉じる">✕</button>
+      <div id="mBody"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ---------------- データ ---------------- */
+// axis: 0=決め方(A→データ/B→ハート) 1=向かう先(A→集める/B→育てる) 2=動き方(A→職人/B→チーム)
+const AXES = ["決め方","向かう先","動き方"];
+const QUESTIONS = [
+  {axis:0, q:"新しいお店を開くか迷ったとき、まず気になるのは？", a:"近くにお客さんがどれくらいいるか、数字で調べたい", b:"「この場所、なんか良さそう」という感覚を大事にしたい"},
+  {axis:0, q:"チラシの効果を知りたいとき、見るのは？", a:"何人来たか・どれくらい売れたか、という数字", b:"お客さんが「良かった」と喜んでくれたかどうか"},
+  {axis:0, q:"友だちに何かをすすめるとき、伝え方は？", a:"「レビュー★4.5だよ」と、事実で伝える", b:"「絶対好きだと思う！」と、気持ちで伝える"},
+  {axis:1, q:"お店をやるなら、ワクワクするのは？", a:"毎日どんどん、新しいお客さんが来る", b:"同じお客さんが「また来たよ」と通ってくれる"},
+  {axis:1, q:"うれしいのは、どっち？", a:"一気にたくさんの人に知られた", b:"少数でも「あなたのファンです」と言われた"},
+  {axis:1, q:"時間をかけるなら、どっち？", a:"まだ知らない人に、見つけてもらう工夫", b:"今いるお客さんに、もっと好かれる工夫"},
+  {axis:2, q:"集中できるのは、どっち？", a:"ひとりで黙々と仕上げる", b:"みんなで話しながら進める"},
+  {axis:2, q:"文化祭でやるなら、どっち？", a:"自分の担当を、とことん作り込む", b:"みんなの意見をまとめて、盛り上げる"},
+  {axis:2, q:"言われてうれしいのは？", a:"「よく一人で、ここまで作ったね」", b:"「みんなを、うまくまとめたね」"},
+];
+
+const GROUPS = {
+  nerai:{name:"ねらい撃ち", color:"var(--blue)",   raw:"#2563eb", desc:"データで新規を取る。広告・数値の見極めが得意"},
+  sikmi:{name:"仕組み",     color:"var(--green)",  raw:"#059669", desc:"数字で仕組み化・関係づくり。続く土台が得意"},
+  sikke:{name:"しかけ",     color:"var(--orange)", raw:"#ea580c", desc:"発想で話題化。企画・瞬発力が得意"},
+  fan:  {name:"ファンづくり",color:"var(--pink)",   raw:"#db2777", desc:"世界観と共感。ブランドが得意"},
+};
+const GROUP_ORDER = ["nerai","sikmi","sikke","fan"];
+
+const WORDS = [["データ派","ハート派"],["集める派","育てる派"],["職人派","チーム派"]];
+
+const TYPES = {
+  "デ集職":{n:"①",name:"ねらい撃ちハンター",catch:"数字を見て、当たる的だけ狙う",g:"nerai",em:"target",
+    strength:"無駄打ちしない。反応の良し悪しを見抜くのが速い",weakness:"数字に出ない良さを見落としがち。ひとりで抱え込む",
+    move:"チラシや投稿を2パターン出して、反応が多い方を残す",ai:"言い方の案出しと、結果メモの整理"},
+  "デ集チ":{n:"②",name:"作戦司令官",catch:"データで作戦を立て、チームで一気に攻める",g:"nerai",em:"clip",
+    strength:"目標から逆算して人を動かす。勢いと数字を両立できる",weakness:"走りながら考えるので、丁寧さが後回しになりがち",
+    move:"「今月は問い合わせ○件」と的を決め、やることを3つに絞る",ai:"作戦の下書き・役割分担案・報告文づくり"},
+  "デ育職":{n:"③",name:"仕組みの設計士",catch:"データで、勝手に回る仕組みを組む",g:"sikmi",em:"gear",
+    strength:"一度作れば長く効く。抜けやモレに気づける",weakness:"完璧主義で遅くなりがち。新規はやや弱め",
+    move:"よくある質問と返事をテンプレ化して、使い回す",ai:"手順書・テンプレ作成、抜けモレのチェック"},
+  "デ育チ":{n:"④",name:"縁の下の分析役",catch:"データで、常連さんとの関係をそっと支える",g:"sikmi",em:"lens",
+    strength:"全体を見て先回りできる。やり方の再現性が高い",weakness:"前に出るのが苦手で、成果が見えにくい",
+    move:"常連さんの来店・購入をメモに残し、傾向をチームで共有",ai:"バラバラの記録の要約、次の一手の候補出し"},
+  "ハ集職":{n:"⑤",name:"ひらめき職人",catch:"独創アイデアで、見たくなる話題をひとりで生む",g:"sikke",em:"bulb",
+    strength:"発想が豊か。人と違う切り口を出せる",weakness:"続かないことがある。ふり返り（検証）が甘い",
+    move:"週1本、いつもと変わった切り口の投稿を出す",ai:"アイデアの壁打ち、切り口を10案出させる"},
+  "ハ集チ":{n:"⑥",name:"盛り上げ仕掛け人",catch:"みんなを巻き込み、一気に話題化するお祭り役",g:"sikke",em:"mega",
+    strength:"瞬発力と巻き込み力がある",weakness:"熱が冷めると失速。ふり返りが後回しになりがち",
+    move:"みんなでネタ出しをする時間を、月1回つくる",ai:"企画のたたき台づくり、告知文の量産"},
+  "ハ育職":{n:"⑦",name:"世界観の紡ぎ手",catch:"物語と世界観で、じわじわ深いファンを育てる",g:"fan",em:"book",
+    strength:"熱いファンをつくる。長く愛される土台になる",weakness:"即効性が弱い。数字では見えにくい",
+    move:"お店やスタッフの想い・裏話を、少しずつ発信する",ai:"想いの言語化、長文の下書きと整え"},
+  "ハ育チ":{n:"⑧",name:"みんなのお世話役",catch:"共感と気配りで、居心地よくファンを増やす",g:"fan",em:"heart",
+    strength:"安心感がある。口コミが自然に広がる",weakness:"断れず抱え込みがち。攻めがやや弱い",
+    move:"来てくれた人へのお礼と、次のひと言を丁寧に返す",ai:"返信文の下書き、気配りの言い回し提案"},
+};
+
+/* ---------------- SVGキャラ（ベース1体＋色＋エンブレム差分） ---------------- */
+function emblem(kind,c){
+  switch(kind){
+    case "target": return `<circle cx="12" cy="12" r="8.5" fill="none" stroke="${c}" stroke-width="2.4"/><circle cx="12" cy="12" r="4.3" fill="none" stroke="${c}" stroke-width="2.4"/><circle cx="12" cy="12" r="1.4" fill="${c}"/>`;
+    case "clip":   return `<rect x="6" y="4.5" width="12" height="15.5" rx="2.2" fill="none" stroke="${c}" stroke-width="2"/><rect x="9" y="3" width="6" height="3.6" rx="1.2" fill="${c}"/><line x1="9" y1="11" x2="15" y2="11" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/><line x1="9" y1="15" x2="14" y2="15" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/>`;
+    case "gear":   return `<circle cx="12" cy="12" r="4.6" fill="none" stroke="${c}" stroke-width="2.2"/><g stroke="${c}" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="2.6" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21.4"/><line x1="2.6" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21.4" y2="12"/><line x1="5.4" y1="5.4" x2="7.1" y2="7.1"/><line x1="16.9" y1="16.9" x2="18.6" y2="18.6"/><line x1="18.6" y1="5.4" x2="16.9" y2="7.1"/><line x1="7.1" y1="16.9" x2="5.4" y2="18.6"/></g>`;
+    case "lens":   return `<circle cx="10.5" cy="10.5" r="6" fill="none" stroke="${c}" stroke-width="2.2"/><line x1="15" y1="15" x2="20.5" y2="20.5" stroke="${c}" stroke-width="2.6" stroke-linecap="round"/>`;
+    case "bulb":   return `<path d="M12 3.2a6 6 0 0 1 3.7 10.7c-.7.6-1.1 1.4-1.2 2.1h-5c-.1-.7-.5-1.5-1.2-2.1A6 6 0 0 1 12 3.2Z" fill="none" stroke="${c}" stroke-width="2"/><line x1="9.7" y1="18.4" x2="14.3" y2="18.4" stroke="${c}" stroke-width="2" stroke-linecap="round"/><line x1="10.4" y1="20.8" x2="13.6" y2="20.8" stroke="${c}" stroke-width="2" stroke-linecap="round"/>`;
+    case "mega":   return `<path d="M4 10 L13.5 6 L13.5 18 L4 14 Z" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 8.2C17.5 9.2 17.5 14.8 13.5 15.8" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round"/><line x1="6.3" y1="14" x2="6.3" y2="19.2" stroke="${c}" stroke-width="2" stroke-linecap="round"/>`;
+    case "book":   return `<path d="M12 6.2C9.2 4.4 5.4 4.4 3.4 5.4V18.2c2-1 5.8-1 8.6.8 2.8-1.8 6.6-1.8 8.6-.8V5.4c-2-1-5.8-1-8.6.8Z" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round"/><line x1="12" y1="6.2" x2="12" y2="19" stroke="${c}" stroke-width="2"/>`;
+    case "heart":  return `<path d="M12 20.4C6 15.2 3 12.2 3 8.7A3.6 3.6 0 0 1 12 6.2 3.6 3.6 0 0 1 21 8.7c0 3.5-3 6.5-9 11.7Z" fill="${c}"/>`;
+  }
+  return "";
+}
+function charSvg(gkey, em, size){
+  const c = GROUPS[gkey].raw;
+  return `<svg viewBox="0 0 120 128" width="${size||''}" height="${size||''}" aria-hidden="true">
+    <ellipse cx="60" cy="122" rx="46" ry="9" fill="rgba(0,0,0,.06)"/>
+    <path d="M18 126 C18 96 38 84 60 84 C82 84 102 96 102 126 Z" fill="${c}"/>
+    <path d="M18 126 C18 96 38 84 60 84 C82 84 102 96 102 126 Z" fill="rgba(255,255,255,.10)"/>
+    <rect x="52" y="70" width="16" height="18" rx="7" fill="#ffdec4"/>
+    <circle cx="60" cy="48" r="25" fill="#ffdec4"/>
+    <path d="M35 46 A25 25 0 0 1 85 46 C85 40 82 30 60 30 C38 30 35 40 35 46 Z" fill="#5b4636"/>
+    <circle cx="51" cy="49" r="2.6" fill="#3b2f26"/>
+    <circle cx="69" cy="49" r="2.6" fill="#3b2f26"/>
+    <path d="M53 57 Q60 63 67 57" fill="none" stroke="#3b2f26" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="93" cy="34" r="18" fill="#fff"/>
+    <circle cx="93" cy="34" r="18" fill="none" stroke="${c}" stroke-width="3"/>
+    <g transform="translate(81,22)">${emblem(em,c)}</g>
+  </svg>`;
+}
+
+/* ---------------- 状態 ---------------- */
+let idx = 0;
+const answers = new Array(9).fill(null);
+
+const $ = id => document.getElementById(id);
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); $(id).classList.add('on'); window.scrollTo({top:0,behavior:'instant'}); }
+
+/* start avatars */
+(function(){
+  const keys = ["デ集職","デ育職","ハ集職","ハ育職"]; // 4グループ各色を1体ずつ
+  $('startAvatars').innerHTML = keys.map(k=>charSvg(TYPES[k].g, TYPES[k].em)).join('');
+})();
+
+function start(){ idx=0; answers.fill(null); render(); show('s-quiz'); }
+function reset(){ idx=0; answers.fill(null); show('s-start'); }
+
+function render(){
+  const q = QUESTIONS[idx];
+  $('qNow').textContent = idx+1;
+  $('qAxis').textContent = AXES[q.axis];
+  $('qBar').style.width = ((idx)/9*100)+'%';
+  $('qText').textContent = q.q;
+  $('qA').textContent = q.a;
+  $('qB').textContent = q.b;
+  $('qBack').style.visibility = idx===0 ? 'hidden' : 'visible';
+}
+function answer(ab){
+  answers[idx] = ab;
+  if(idx < 8){ idx++; render(); }
+  else{ $('qBar').style.width='100%'; finish(); }
+}
+function back(){ if(idx>0){ idx--; render(); } }
+
+/* ---------------- 判定 ---------------- */
+function finish(){
+  const cnt=[0,0,0];
+  QUESTIONS.forEach((q,i)=>{ if(answers[i]==='a') cnt[q.axis]++; });
+  const d = cnt[0]>=2 ? "デ":"ハ";
+  const m = cnt[1]>=2 ? "集":"育";
+  const w = cnt[2]>=2 ? "職":"チ";
+  const code = d+m+w;
+  const t = TYPES[code];
+  const g = GROUPS[t.g];
+
+  // hero
+  myCode = code;
+  $('rHero').style.background = grad(g);
+  $('rHero').innerHTML = heroInner(t,150);
+
+  // three words
+  const picks = [ d==="デ"?0:1, m==="集"?0:1, w==="職"?0:1 ];
+  $('rWords').innerHTML = WORDS.map((pair,i)=>
+    `<span class="word"><span>${AXES[i]}</span>${pair[picks[i]]}</span>`).join('');
+
+  // rows
+  $('rRows').innerHTML = rowsInner(t);
+
+  // groups
+  $('rGroups').innerHTML = GROUP_ORDER.map(gk=>{
+    const gg=GROUPS[gk]; const me = gk===t.g;
+    return `<div class="gcell ${me?'me':''}">
+      <div class="gname"><span class="dot" style="background:${gg.raw}"></span>${gg.name}
+        ${me?`<span class="youare" style="background:${gg.raw}">あなた</span>`:''}</div>
+      <div class="gdesc">${gg.desc}</div>
+    </div>`;
+  }).join('');
+
+  show('s-result');
+}
+
+/* ---------------- タイプ一覧・詳細 ---------------- */
+let myCode = null;
+function grad(g){ return `linear-gradient(160deg, ${g.raw} 0%, ${shade(g.raw)} 100%)`; }
+function heroInner(t,size){
+  return `${charSvg(t.g,t.em,size)}
+     <div class="r-num">TYPE ${t.n}</div>
+     <div class="r-name">${t.name}</div>
+     <p class="r-catch">${t.catch}</p>`;
+}
+function rowsInner(t){
+  const g=GROUPS[t.g];
+  return `<div class="row"><div class="k"><span class="dot" style="background:${g.raw}"></span>強み</div><div class="v">${t.strength}</div></div>
+     <div class="row weak"><div class="k">苦手 <span class="tag">ここをAIで埋める</span></div><div class="v">${t.weakness}</div></div>
+     <div class="row"><div class="k">おすすめの一手</div><div class="v">${t.move}</div></div>
+     <div class="row"><div class="k">AIの使いどころ</div><div class="v">${t.ai}</div></div>`;
+}
+function showTypes(){
+  $('typesList').innerHTML = GROUP_ORDER.map(gk=>{
+    const gg=GROUPS[gk];
+    const cards = Object.keys(TYPES).filter(c=>TYPES[c].g===gk).map(c=>{
+      const t=TYPES[c]; const me=(c===myCode);
+      return `<button class="tcard" onclick="openType('${c}')">
+        <div class="tchar">${charSvg(t.g,t.em)}</div>
+        <div>
+          <div class="tname"><b>${t.n}</b>${t.name}${me?`<span class="me-badge" style="background:${gg.raw}">あなた</span>`:''}</div>
+          <div class="tcatch">${t.catch}</div>
+        </div>
+      </button>`;
+    }).join('');
+    return `<div class="tgroup">
+      <div class="tglabel"><span class="dot" style="background:${gg.raw}"></span>${gg.name}<span class="gd">${gg.desc}</span></div>
+      <div class="tlist">${cards}</div>
+    </div>`;
+  }).join('');
+  $('typesActions').innerHTML = myCode
+    ? `<button class="btn ghost" onclick="show('s-result')">← 自分の結果にもどる</button>
+       <button class="btn" style="margin-top:12px" onclick="reset()">もう一度やってみる</button>`
+    : `<button class="btn" onclick="start()">診断をはじめる</button>`;
+  show('s-types');
+}
+function openType(code){
+  const t=TYPES[code], g=GROUPS[t.g];
+  $('mBody').innerHTML =
+    `<div class="m-hero" style="background:${grad(g)}">${heroInner(t,110)}
+       <div class="m-grp"><span class="dot" style="background:#fff"></span>${g.name}グループ</div></div>
+     <div class="rows">${rowsInner(t)}</div>`;
+  $('modal').classList.add('on');
+}
+function closeType(){ $('modal').classList.remove('on'); }
+$('modal').addEventListener('click', e=>{ if(e.target.id==='modal') closeType(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeType(); });
+
+function shade(hex){ // 少し濃くする
+  const n=parseInt(hex.slice(1),16);
+  let r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  r=Math.round(r*.72); g=Math.round(g*.72); b=Math.round(b*.72);
+  return `rgb(${r},${g},${b})`;
+}
+</script>
+</body>
+</html>
