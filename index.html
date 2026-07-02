@@ -241,7 +241,7 @@ const QUESTIONS = [
 const GROUPS = {
   nerai:{name:"ねらい撃ち", color:"var(--blue)",   raw:"#2563eb", desc:"データで新規を取る。広告・数値の見極めが得意"},
   sikmi:{name:"仕組み",     color:"var(--green)",  raw:"#059669", desc:"数字で仕組み化・関係づくり。続く土台が得意"},
-  sikke:{name:"しかけ",     color:"var(--orange)", raw:"#ea580c", desc:"発想で話題化。企画・瞬発力が得意"},
+  sikke:{name:"しかけ",     color:"var(--orange)", raw:"#ea580c", desc:"直感とひらめきで話題化。企画・瞬発力が得意"},
   fan:  {name:"ファンづくり",color:"var(--pink)",   raw:"#db2777", desc:"世界観と共感。ブランドが得意"},
 };
 const GROUP_ORDER = ["nerai","sikmi","sikke","fan"];
@@ -253,13 +253,13 @@ const TYPES = {
     strength:"無駄打ちしない。反応の良し悪しを見抜くのが速い",weakness:"数字に出ない良さを見落としがち。ひとりで抱え込む",
     move:"チラシや投稿を2パターン出して、反応が多い方を残す",ai:"言い方の案出しと、結果メモの整理"},
   "デ集チ":{n:"②",name:"作戦司令官",catch:"データで作戦を立て、チームで一気に攻める",g:"nerai",em:"clip",
-    strength:"目標から逆算して人を動かす。勢いと数字を両立できる",weakness:"走りながら考えるので、丁寧さが後回しになりがち",
+    strength:"目標から逆算して人を動かす。勢いと数字を両立できる",weakness:"勢いで攻めるぶん、常連との関係づくり（継続）や丁寧さは後回しになりがち",
     move:"「今月は問い合わせ○件」と的を決め、やることを3つに絞る",ai:"作戦の下書き・役割分担案・報告文づくり"},
   "デ育職":{n:"③",name:"仕組みの設計士",catch:"データで、勝手に回る仕組みを組む",g:"sikmi",em:"gear",
     strength:"一度作れば長く効く。抜けやモレに気づける",weakness:"完璧主義で遅くなりがち。新規はやや弱め",
     move:"よくある質問と返事をテンプレ化して、使い回す",ai:"手順書・テンプレ作成、抜けモレのチェック"},
   "デ育チ":{n:"④",name:"縁の下の分析役",catch:"データで、常連さんとの関係をそっと支える",g:"sikmi",em:"lens",
-    strength:"全体を見て先回りできる。やり方の再現性が高い",weakness:"前に出るのが苦手で、成果が見えにくい",
+    strength:"全体を見て先回りできる。やり方の再現性が高い",weakness:"新規を攻める・前に出るのは弱め。支え役ゆえ成果が見えにくい",
     move:"常連さんの来店・購入をメモに残し、傾向をチームで共有",ai:"バラバラの記録の要約、次の一手の候補出し"},
   "ハ集職":{n:"⑤",name:"ひらめき職人",catch:"独創アイデアで、見たくなる話題をひとりで生む",g:"sikke",em:"bulb",
     strength:"発想が豊か。人と違う切り口を出せる",weakness:"続かないことがある。ふり返り（検証）が甘い",
@@ -327,7 +327,7 @@ function render(){
   const q = QUESTIONS[idx];
   $('qNow').textContent = idx+1;
   $('qAxis').textContent = AXES[q.axis];
-  $('qBar').style.width = ((idx)/9*100)+'%';
+  $('qBar').style.width = ((idx+1)/9*100)+'%';
   $('qText').textContent = q.q;
   $('qA').textContent = q.a;
   $('qB').textContent = q.b;
